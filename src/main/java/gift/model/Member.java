@@ -21,18 +21,23 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "kakao_id", nullable = false)
+    private Long kakaoId;
+
+
     public Member() {
 
     }
 
-    public Member(Long id, String email, String password) {
+    public Member(Long id, String email, String password, Long kakaoId) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.kakaoId = kakaoId;
     }
 
-    public Member(String email, String password) {
-        this(null, email, password);
+    public Member(String email, String password, Long kakaoId) {
+        this(null, email, password, kakaoId);
     }
 
     public Long getId() {
@@ -45,5 +50,9 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public Long getKakaoId() {
+        return kakaoId;
     }
 }

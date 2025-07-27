@@ -29,6 +29,8 @@
       <div th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}"></div>
     </div>
 
+    <input type="hidden" th:field="*{kakaoId}" />
+
     <button type="submit" class="btn btn-primary">등록</button>
     <a href="/admin/members" class="btn btn-secondary">취소</a>
   </form>

@@ -32,7 +32,7 @@ public class MemberService {
 
         String encryptedPassword = PasswordUtil.encode(request.getPassword());
 
-        Member member = new Member(request.getEmail(), encryptedPassword);
+        Member member = new Member(request.getEmail(), encryptedPassword, request.getKakaoId());
         Member savedMember = memberRepository.save(member);
 
         String accessToken = jwtUtil.generateAccessToken(savedMember);
@@ -63,6 +63,19 @@ public class MemberService {
             throw new MemberNotFoundException(email);
         }
         return member.get();
+    }
+
+    public TokenResponse findByKakaoId(Long kakaoId) {
+        Member member = memberRepository.findByKakaoId(kakaoId).orElseThrow(() ->
+            new IllegalStateException("조회된 사용자가 없습니다. kakaoId : " + kakaoId));
+
+        String accessToken = jwtUtil.generateAccessToken(member);
+
+        return new TokenResponse(accessToken);
+    }
+
+    public boolean isKakaoIdExists(Long kakaoId) {
+        return memberRepository.existsByKakaoId(kakaoId);
     }
 
 }

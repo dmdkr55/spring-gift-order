@@ -7,9 +7,9 @@
 - 토큰 받기를 읽고 액세스 토큰을 추출한다.
 - 앱 키, 인가 코드가 절대 유출되지 않도록 한다.
 - 특히 시크릿 키는 GitHub나 클라이언트 코드 등 외부에서 볼 수 있는 곳에 추가하지 않는다.
-- (선택) 인가 코드를 받는 방법이 불편한 경우 카카오 로그인 화면을 구현한다.  
+- (선택) 인가 코드를 받는 방법이 불편한 경우 카카오 로그인 화면을 구현한다.
 
 지금과 같이 클라이언트가 없는 상황에서는 아래와 같은 방법으로 인가 코드를 획득한다.
 1. 내 애플리케이션 > 앱 설정 > 앱 키로 이동하여 REST API 키를 복사한다.
-2. https://kauth.kakao.com/oauth/authorize?scope=talk_message&response_type=code&redirect_uri=http://localhost:8080&client_id={REST_API_KEY}에 접속하여 카카오톡 메시지 전송에 동의한다.
-3. http://localhost:8080/?code={AUTHORIZATION_CODE}에서 인가 코드를 추출한다.
+2. https://kauth.kakao.com/oauth/authorize?scope=talk_message&response_type=code&redirect_uri=http://localhost:8080&client_id={REST_API_KEY} 에 접속하여 카카오톡 메시지 전송에 동의한다.
+3. http://localhost:8080/?code={AUTHORIZATION_CODE} 에서 인가 코드를 추출한다.
