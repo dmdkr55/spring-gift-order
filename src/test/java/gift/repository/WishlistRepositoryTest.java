@@ -36,7 +36,7 @@ class WishlistRepositoryTest {
     }
 
     private Member saveMember() {
-        Member member = new Member("kim@naver.com", "1234");
+        Member member = new Member("kim@naver.com", "1234", -1L);
         return memberRepository.save(member);
     }
 

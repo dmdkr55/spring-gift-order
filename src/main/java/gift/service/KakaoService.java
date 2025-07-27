@@ -36,8 +36,8 @@ public class KakaoService {
         body.add("code", authorizationCode);
 
         var request = new RequestEntity<>(body, headers, HttpMethod.POST, URI.create(url));
-        KakaoTokenResponseDto responseDto = restTemplate.postForEntity(url, request,
-            KakaoTokenResponseDto.class).getBody();
+        KakaoTokenResponseDto responseDto = restTemplate.postForEntity(
+            url, request, KakaoTokenResponseDto.class).getBody();
 
         return responseDto.getAccessToken();
     }

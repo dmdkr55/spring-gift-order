@@ -37,6 +37,10 @@ public class KakaoUserInfoResponseDto {
     @JsonProperty("for_partner")
     private Partner partner;
 
+    public KakaoUserInfoResponseDto(Long id) {
+        this.id = id;
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public class KakaoAccount {
 
