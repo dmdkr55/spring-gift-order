@@ -23,6 +23,7 @@
     <tr>
       <th>ID</th>
       <th>Email</th>
+      <th>KakaoId</th>
       <th>Password</th>
       <th>Actions</th>
     </tr>
@@ -31,6 +32,7 @@
     <tr th:each="member : ${members}">
       <td th:text="${member.id}"></td>
       <td th:text="${member.email}"></td>
+      <td th:text="${member.kakaoId}"></td>
       <td th:text="${member.password}"></td>
       <td>
         <a th:href="@{'/admin/members/edit/' + ${member.id}}" class="btn btn-sm btn-primary">✏️
