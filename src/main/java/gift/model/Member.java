@@ -21,23 +21,41 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "kakao_id", nullable = false)
-    private Long kakaoId;
+    @Column(name = "social_id")
+    private Long socialId;
 
+    @Column(name = "provider_type")
+    private String providerType;
+
+    @Column(name = "social_access_token")
+    private String socialAccessToken;
 
     public Member() {
-
     }
 
-    public Member(Long id, String email, String password, Long kakaoId) {
+    public Member(String email, String password) {
+        this(null, email, password, -1L, null, null);
+    }
+
+    public Member(String email, String password, Long socialId, String providerType,
+        String socialAccessToken) {
+        this(null, email, password, socialId, providerType, socialAccessToken);
+    }
+
+    public Member(Long id, String email, String password, Long socialId, String providerType,
+        String socialAccessToken) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.kakaoId = kakaoId;
+        this.socialId = socialId;
+        this.providerType = providerType;
+        this.socialAccessToken = socialAccessToken;
     }
 
-    public Member(String email, String password, Long kakaoId) {
-        this(null, email, password, kakaoId);
+    public void updateSocialInfo(Long socialId, String providerType, String socialAccessToken) {
+        this.socialId = socialId;
+        this.providerType = providerType;
+        this.socialAccessToken = socialAccessToken;
     }
 
     public Long getId() {
@@ -52,7 +70,16 @@ public class Member {
         return password;
     }
 
-    public Long getKakaoId() {
-        return kakaoId;
+    public Long getSocialId() {
+        return socialId;
     }
+
+    public String getProviderType() {
+        return providerType;
+    }
+
+    public String getSocialAccessToken() {
+        return socialAccessToken;
+    }
+
 }

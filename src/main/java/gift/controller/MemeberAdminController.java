@@ -31,9 +31,9 @@ public class MemeberAdminController {
 
     @GetMapping("/new")
     public String showAddForm(Model model,
-        @RequestParam(name = "kakaoId", defaultValue = "-1") Long kakaoId) {
+        @RequestParam(name = "socialId", defaultValue = "-1") Long socialId) {
         RegisterRequest request = new RegisterRequest();
-        request.setKakaoId(kakaoId);
+        request.setSocialId(socialId);
         model.addAttribute("registerRequest", request);
         return "member/create-form";
     }
@@ -42,11 +42,6 @@ public class MemeberAdminController {
     public String addMember(@Valid @ModelAttribute RegisterRequest request,
         BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            System.out.println("!!!!!!Validation Errors:");
-            bindingResult.getAllErrors().forEach(error -> {
-                System.out.println(
-                    " - " + error.getObjectName() + ": " + error.getDefaultMessage());
-            });
             model.addAttribute("registerRequest", request);
             return "member/create-form";
         }

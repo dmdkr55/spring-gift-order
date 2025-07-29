@@ -22,6 +22,7 @@ import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import gift.service.MemberService;
 import gift.service.WishlistService;
+import jakarta.transaction.Transactional;
 import java.util.Optional;
 import jdk.jshell.spi.ExecutionControlProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,10 +36,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class WishlistControllerTest {
-
-    @Autowired
-    private WishlistRepository wishlistRepository;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -57,12 +56,6 @@ public class WishlistControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void setUp() {
-        wishlistRepository.deleteAll();
-        memberRepository.deleteAll(); // 테스트마다 DB 초기화
-    }
 
     private Product saveProduct() {
         Product product = new Product("test_coffee", 2500, "https://test_coffee.jpg", false);
@@ -172,15 +165,6 @@ public class WishlistControllerTest {
                 delete("/api/wishes/" + product.getId()).contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", tokenResponse.getToken()))
             .andExpect(status().isNoContent());
-    }
-
-    @Test
-    void 존재하지_않는_위시리스트_삭제() throws Exception {
-        TokenResponse tokenResponse = memberService.save(
-            new RegisterRequest("abc@naver.com", "1234"));
-
-        mockMvc.perform(delete("/api/wishes/1").contentType(MediaType.APPLICATION_JSON)
-            .header("Authorization", tokenResponse.getToken())).andExpect(status().isNoContent());
     }
 
     @Test

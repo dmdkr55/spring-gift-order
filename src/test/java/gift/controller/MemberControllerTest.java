@@ -10,6 +10,7 @@ import gift.dto.LoginRequest;
 import gift.dto.RegisterRequest;
 import gift.repository.MemberRepository;
 import gift.service.MemberService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class MemberControllerTest {
 
     @Autowired
@@ -33,11 +35,6 @@ public class MemberControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void setUp() {
-        memberRepository.deleteAll(); // 테스트마다 DB 초기화
-    }
 
     @Test
     void 회원가입_성공() throws Exception {

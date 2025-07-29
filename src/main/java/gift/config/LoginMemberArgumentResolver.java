@@ -32,7 +32,9 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
         String email = (String) webRequest.getAttribute("loginMemberEmail",
             RequestAttributes.SCOPE_REQUEST);
+        String jwtAccessToken = (String) webRequest.getAttribute("jwtAccessToken",
+            RequestAttributes.SCOPE_REQUEST);
 
-        return new LoginMemberDto(email);
+        return new LoginMemberDto(email, jwtAccessToken);
     }
 }

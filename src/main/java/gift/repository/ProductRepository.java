@@ -1,6 +1,7 @@
 package gift.repository;
 
 import gift.model.Product;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findAllByNeedsMdApprovalFalse(Pageable pageable);
 
+    List<Product> findAllByNeedsMdApprovalFalse();
+
     Optional<Product> findByIdAndNeedsMdApprovalFalse(Long id);
+
+    Long countByNeedsMdApprovalIsFalse();
 
 }

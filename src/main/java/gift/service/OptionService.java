@@ -56,6 +56,15 @@ public class OptionService {
             option.getQuantity());
     }
 
+    public Option getOption(Long optionId) {
+        Optional<Option> foundOption = optionRepository.findById(optionId);
+        if (foundOption.isEmpty()) {
+            throw new IllegalArgumentException("id: " + optionId + ". 해당 ID의 옵션이 존재하지 않습니다.");
+        }
+
+        return foundOption.get();
+    }
+
     public void decreaseQuantity(Long optionId, int amount) {
         Optional<Option> foundOption = optionRepository.findById(optionId);
         if (foundOption.isEmpty()) {

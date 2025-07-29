@@ -1,7 +1,7 @@
 insert into product(name, price, image_url, needs_md_approval) values ('커피', 2000, 'https://coffee.jpg', false);
 insert into product(name, price, image_url, needs_md_approval) values ('티', 2500, 'https://tea.jpg', false);
 insert into product(name, price, image_url, needs_md_approval) values ('카카오음료', 2500, 'https://kakaoDrink.jpg', true);
-insert into member(kakao_id, email, password) values (4363932823, 'bbabbasi0505@naver.com', '$2a$10$pcziAdqy0y.4MGWKMMT0YuKlPZBVbDwoj36KHhlzecxRGdYlCFLuK');
+insert into member(social_id, provider_type, email, password) values (4363932823,'kakao', 'bbabbasi0505@naver.com', '$2a$10$pcziAdqy0y.4MGWKMMT0YuKlPZBVbDwoj36KHhlzecxRGdYlCFLuK');
 insert into options(quantity, product_id, name) values ('100', 1, '핫 커피');
 insert into options(quantity, product_id, name) values ('100', 1, '아이스 커피');
 insert into options(quantity, product_id, name) values ('500', 2, '녹차');
