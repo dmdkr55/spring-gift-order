@@ -14,17 +14,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.model.Product;
 import gift.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class ProductControllerTest {
 
     @Autowired
@@ -35,12 +39,6 @@ public class ProductControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void setUp() {
-        productRepository.deleteAll(); // 테스트마다 DB 초기화
-    }
-
 
     private Product saveProduct() {
         Product product = new Product("test_coffee", 2500, "https://test_coffee.jpg", false);
@@ -157,47 +155,52 @@ public class ProductControllerTest {
     @Test
     void 전체_상품_조회() throws Exception {
         // given
-        productRepository.save(new Product(null, "아이스 아메리카노", 2500, "http://americano.jpg", false));
-        productRepository.save(new Product(null, "아이스티", 3000, "http://iceTea.jpg", false));
+        Long beforeSize = productRepository.countByNeedsMdApprovalIsFalse();
+        int productCount = 3;
+        for (int i = 0; i < productCount; i++) {
+            saveProduct();
+        }
 
         // when & then
         mockMvc.perform(get("/api/products")).andExpect(status().isOk())
-            .andExpect(jsonPath("$.content.length()", is(2)));
+            .andExpect(jsonPath("$.content.length()").value(beforeSize + productCount));
     }
 
     @Test
     void 특정_상품_조회() throws Exception {
-        Product saved = productRepository.save(
-            new Product(null, "아이스 아메리카노", 2500, "http://americano.jpg", false));
+        // given
+        Product saved = saveProduct();
 
+        // when & then
         mockMvc.perform(get("/api/products/" + saved.getId())).andExpect(status().isOk())
-            .andExpect(jsonPath("$.name").value("아이스 아메리카노"));
+            .andExpect(jsonPath("$.name").value(saved.getName()));
     }
 
     @Test
     void 존재하지_않는_상품_조회시_404_반환() throws Exception {
+        // given
         Long fakeId = 999L;
 
+        // when then
         mockMvc.perform(get("/api/products/" + fakeId)).andExpect(status().isNotFound());
     }
 
     @Test
     void 상품_수정() throws Exception {
-        Product saved = productRepository.save(
-            new Product(null, "아이스 아메리카노", 2500, "http://americano.jpg", false));
+        // given
+        Product saved = saveProduct();
 
         Product updated = new Product();
         updated.setName("핫 아메리카노");
         updated.setPrice(2000);
         updated.setImageUrl("http://hot_americano.jpg");
 
-        //수정요청
+        // when & then
         mockMvc.perform(
                 put("/api/products/" + saved.getId()).contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(updated)))
             .andExpect(status().isNoContent());
 
-        //조회
         mockMvc.perform(get("/api/products/" + saved.getId()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name", is("핫 아메리카노")))
@@ -207,15 +210,17 @@ public class ProductControllerTest {
 
     @Test
     void 상품_삭제() throws Exception {
-        Product saved = productRepository.save(
-            new Product(null, "아이스 아메리카노", 2500, "http://americano.jpg", false));
+        // given
+        Product saved = saveProduct();
 
+        // when & then
         mockMvc.perform(delete("/api/products/" + saved.getId())).andExpect(status().isNoContent());
     }
 
     @Test
     void pagination() throws Exception {
         // given
+        Long beforeSize = productRepository.countByNeedsMdApprovalIsFalse();
         for (int i = 0; i < 15; i++) {
             saveProduct();
         }
@@ -223,11 +228,11 @@ public class ProductControllerTest {
         // when & then
         // 0번 페이지 (최대 10개)
         mockMvc.perform(get("/api/products?page=0&size=10")).andExpect(status().isOk())
-            .andExpect(jsonPath("$.content.length()", is(10)));
+            .andExpect(jsonPath("$.content.length()").value(10));
 
-        // 1번 페이지 (나머지 5개)
+        // 1번 페이지 (나머지)
         mockMvc.perform(get("/api/products?page=1&size=10")).andExpect(status().isOk())
-            .andExpect(jsonPath("$.content.length()", is(5)));
+            .andExpect(jsonPath("$.content.length()").value(beforeSize + 5));
     }
 
 }

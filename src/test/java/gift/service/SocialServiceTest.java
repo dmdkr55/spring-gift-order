@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import gift.config.KakaoProperties;
-import gift.dto.KakaoTokenResponseDto;
+import gift.dto.SocialTokenResponseDto;
 import gift.dto.KakaoUserInfoResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @ExtendWith(MockitoExtension.class)
-class KakaoServiceTest {
+class SocialServiceTest {
 
     @Mock
     private RestTemplate restTemplate;
@@ -30,11 +30,11 @@ class KakaoServiceTest {
     @Mock
     private KakaoProperties kakaoProperties;
 
-    private KakaoService kakaoService;
+    private SocialService socialIdService;
 
     @BeforeEach
     void setUp() {
-        kakaoService = new KakaoService(kakaoProperties, restTemplate);
+        socialIdService = new SocialService(kakaoProperties, restTemplate);
     }
 
     @Test
@@ -43,20 +43,20 @@ class KakaoServiceTest {
         String code = "test-auth-code";
         String expectedAccessToken = "test-access-token";
         String url = "https://kauth.kakao.com/oauth/token";
-        KakaoTokenResponseDto mockResponse = new KakaoTokenResponseDto();
+        SocialTokenResponseDto mockResponse = new SocialTokenResponseDto();
         mockResponse.setAccessToken(expectedAccessToken);
 
-        ResponseEntity<KakaoTokenResponseDto> responseEntity =
+        ResponseEntity<SocialTokenResponseDto> responseEntity =
             new ResponseEntity<>(mockResponse, HttpStatus.OK);
 
         when(restTemplate.postForEntity(
             eq(url),
             any(RequestEntity.class),
-            eq(KakaoTokenResponseDto.class)))
+            eq(SocialTokenResponseDto.class)))
             .thenReturn(responseEntity);
 
         // when
-        String accessToken = kakaoService.getAccessTokenFromKakao(code);
+        String accessToken = socialIdService.getAccessTokenFromKakao(code);
 
         // then
         assertEquals(expectedAccessToken, accessToken);
@@ -71,12 +71,12 @@ class KakaoServiceTest {
         when(restTemplate.postForEntity(
             eq(url),
             any(RequestEntity.class),
-            eq(KakaoTokenResponseDto.class)))
+            eq(SocialTokenResponseDto.class)))
             .thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
 
         // when & then
         assertThrows(HttpClientErrorException.class,
-            () -> kakaoService.getAccessTokenFromKakao(code));
+            () -> socialIdService.getAccessTokenFromKakao(code));
     }
 
     @Test
@@ -84,16 +84,16 @@ class KakaoServiceTest {
         // given
         String code = "test-auth-code";
 
-        ResponseEntity<KakaoTokenResponseDto> nullResponse = new ResponseEntity<>(null, HttpStatus.OK);
+        ResponseEntity<SocialTokenResponseDto> nullResponse = new ResponseEntity<>(null, HttpStatus.OK);
 
         when(restTemplate.postForEntity(
             any(String.class),
             any(RequestEntity.class),
-            eq(KakaoTokenResponseDto.class)
+            eq(SocialTokenResponseDto.class)
         )).thenReturn(nullResponse);
 
         // when & then
-        assertThrows(NullPointerException.class, () -> kakaoService.getAccessTokenFromKakao(code));
+        assertThrows(NullPointerException.class, () -> socialIdService.getAccessTokenFromKakao(code));
     }
 
 
@@ -117,7 +117,7 @@ class KakaoServiceTest {
             .thenReturn(responseEntity);
 
         // when
-        KakaoUserInfoResponseDto result = kakaoService.getUserInfo(accessToken);
+        KakaoUserInfoResponseDto result = socialIdService.getUserInfo(accessToken);
 
         // then
         assertNotNull(result);
@@ -138,7 +138,7 @@ class KakaoServiceTest {
         )).thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
 
         // when & then
-        assertThrows(HttpClientErrorException.class, () -> kakaoService.getUserInfo(accessToken));
+        assertThrows(HttpClientErrorException.class, () -> socialIdService.getUserInfo(accessToken));
     }
 
 }

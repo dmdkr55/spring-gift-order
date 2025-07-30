@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.dto.LoginRequest;
+import gift.dto.SocialInfoDto;
 import gift.exception.EmailAlreadyExistsException;
 import gift.exception.InvalidPasswordException;
 import gift.exception.MemberNotFoundException;
@@ -10,6 +11,7 @@ import gift.dto.RegisterRequest;
 import gift.dto.TokenResponse;
 import gift.model.Member;
 import gift.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class MemberService {
 
         String encryptedPassword = PasswordUtil.encode(request.getPassword());
 
-        Member member = new Member(request.getEmail(), encryptedPassword, request.getKakaoId());
+        Member member = new Member(request.getEmail(), encryptedPassword);
         Member savedMember = memberRepository.save(member);
 
         String accessToken = jwtUtil.generateAccessToken(savedMember);
@@ -65,17 +67,26 @@ public class MemberService {
         return member.get();
     }
 
-    public TokenResponse findByKakaoId(Long kakaoId) {
-        Member member = memberRepository.findByKakaoId(kakaoId).orElseThrow(() ->
-            new IllegalStateException("조회된 사용자가 없습니다. kakaoId : " + kakaoId));
+    public TokenResponse findBySocialId(Long socialId) {
+        Member member = memberRepository.findBySocialId(socialId).orElseThrow(() ->
+            new IllegalStateException("조회된 사용자가 없습니다. socialId : " + socialId));
 
         String accessToken = jwtUtil.generateAccessToken(member);
 
         return new TokenResponse(accessToken);
     }
 
-    public boolean isKakaoIdExists(Long kakaoId) {
-        return memberRepository.existsByKakaoId(kakaoId);
+    public boolean isSocialIdExists(Long socialId) {
+        return memberRepository.existsBySocialId(socialId);
     }
 
+    @Transactional
+    public void updateSocialInfo(SocialInfoDto socialInfoDto) {
+        Member member = memberRepository.findBySocialId(socialInfoDto.getSocialId()).orElseThrow(
+            () -> new IllegalStateException(
+                "조회된 사용자가 없습니다. socialId : " + socialInfoDto.getSocialId()));
+
+        member.updateSocialInfo(socialInfoDto.getSocialId(), socialInfoDto.getProviderType(),
+            socialInfoDto.getSocialAccessToken());
+    }
 }

@@ -15,7 +15,7 @@ public class RegisterRequest {
     private String password;
 
     @NotNull
-    private Long kakaoId;
+    private Long socialId;
 
     public RegisterRequest() {
     }
@@ -24,10 +24,10 @@ public class RegisterRequest {
         this(email, password, -1L);
     }
 
-    public RegisterRequest(String email, String password, Long kakaoId) {
+    public RegisterRequest(String email, String password, Long socialId) {
         this.email = email;
         this.password = password;
-        this.kakaoId = kakaoId;
+        this.socialId = socialId;
     }
 
     public String getEmail() {
@@ -38,8 +38,8 @@ public class RegisterRequest {
         return password;
     }
 
-    public Long getKakaoId() {
-        return kakaoId;
+    public Long getSocialId() {
+        return socialId;
     }
 
     public void setEmail(String email) {
@@ -50,7 +50,7 @@ public class RegisterRequest {
         this.password = password;
     }
 
-    public void setKakaoId(Long kakaoId) {
-        this.kakaoId = kakaoId;
+    public void setSocialId(Long socialId) {
+        this.socialId = socialId;
     }
 }

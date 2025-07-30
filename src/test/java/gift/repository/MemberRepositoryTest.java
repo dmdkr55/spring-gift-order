@@ -24,7 +24,7 @@ public class MemberRepositoryTest {
     @Test
     void save() {
         // given
-        Member expected = new Member("kim@naver.com", "1234", -1L);
+        Member expected = new Member("kim@naver.com", "1234");
 
         // when
         Member actual = memberRepository.save(expected);
@@ -40,7 +40,7 @@ public class MemberRepositoryTest {
     @Test
     void findByEmail() {
         // given
-        Member expected = new Member("kim@naver.com", "1234", -1L);
+        Member expected = new Member("kim@naver.com", "1234");
         memberRepository.save(expected);
 
         // when
@@ -53,8 +53,8 @@ public class MemberRepositoryTest {
     @Test
     void findAll() {
         // given
-        Member member1 = new Member("kim@naver.com", "1234", -1L);
-        Member member2 = new Member("lee@naver.com", "5678", -1L);
+        Member member1 = new Member("kim@naver.com", "1234");
+        Member member2 = new Member("lee@naver.com", "5678");
         memberRepository.save(member1);
         memberRepository.save(member2);
 

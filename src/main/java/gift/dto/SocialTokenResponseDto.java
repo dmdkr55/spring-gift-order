@@ -2,7 +2,7 @@ package gift.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class KakaoTokenResponseDto {
+public class SocialTokenResponseDto {
 
     @JsonProperty("token_type")
     String tokenType;
@@ -19,10 +19,10 @@ public class KakaoTokenResponseDto {
     @JsonProperty("scope")
     String scope;
 
-    public KakaoTokenResponseDto() {
+    public SocialTokenResponseDto() {
     }
 
-    public KakaoTokenResponseDto(String tokenType, String accessToken, String idToken,
+    public SocialTokenResponseDto(String tokenType, String accessToken, String idToken,
         Integer expiresIn, String refreshToken, Integer refreshTokenExpiresIn, String scope) {
         this.tokenType = tokenType;
         this.accessToken = accessToken;

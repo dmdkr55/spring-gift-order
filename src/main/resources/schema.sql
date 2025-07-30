@@ -1,39 +1,10 @@
-CREATE TABLE product
-(
-    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name            VARCHAR(100) NOT NULL,
-    price           INT          NOT NULL,
-    imageUrl        VARCHAR(255) NOT NULL,
-    needsMdApproval BOOLEAN      NOT NULL
-);
-
-CREATE TABLE member
-(
-    id       BIGINT AUTO_INCREMENT PRIMARY KEY,
-    email    VARCHAR(100) NOT NULL,
-    password VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE wishlist
-(
-    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
-    member_id  BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    quantity   INT    NOT NULL,
-
-    CONSTRAINT fk_wishlist_member FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
-    CONSTRAINT fk_wishlist_product FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE,
-    CONSTRAINT uc_member_product UNIQUE (member_id, product_id)
-);
-
-CREATE TABLE option
-(
-    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
-    product_id BIGINT      NOT NULL,
-    name       VARCHAR(50) NOT NULL,
-    quantity   BIGINT      NOT NULL,
-
-    CONSTRAINT chk_quantity CHECK (quantity >= 1 AND quantity < 100000000),
-    CONSTRAINT fk_option_product FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE,
-    CONSTRAINT uc_product_option UNIQUE (product_id, name)
-);
+insert into product(name, price, image_url, needs_md_approval) values ('커피', 2000, 'https://coffee.jpg', false);
+insert into product(name, price, image_url, needs_md_approval) values ('티', 2500, 'https://tea.jpg', false);
+insert into product(name, price, image_url, needs_md_approval) values ('카카오음료', 2500, 'https://kakaoDrink.jpg', true);
+insert into member(social_id, provider_type, email, password) values (4363932823,'kakao', 'bbabbasi0505@naver.com', '$2a$10$pcziAdqy0y.4MGWKMMT0YuKlPZBVbDwoj36KHhlzecxRGdYlCFLuK');
+insert into options(quantity, product_id, name) values ('100', 1, '핫 커피');
+insert into options(quantity, product_id, name) values ('100', 1, '아이스 커피');
+insert into options(quantity, product_id, name) values ('500', 2, '녹차');
+insert into options(quantity, product_id, name) values ('1000', 2, '홍차');
+insert into options(quantity, product_id, name) values ('1500', 2, '우롱차');
+insert into wishlist(quantity, member_id, product_id) values (10, 1, 1);

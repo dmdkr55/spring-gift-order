@@ -28,8 +28,8 @@ public class JwtAuthenticationFilter implements Filter {
 
         String uri = request.getRequestURI();
 
-        // wishlist 경로 토큰 검사. 로그인이 되어야 이용 가능한 기능
-        if (uri.startsWith("/api/wishes")) {
+        // wishlist, orders 경로 토큰 검사. 로그인이 되어야 이용 가능한 기능
+        if (uri.startsWith("/api/wishes") || uri.startsWith("/api/orders")) {
 
             String token = request.getHeader("Authorization");
 
@@ -47,6 +47,7 @@ public class JwtAuthenticationFilter implements Filter {
             }
 
             request.setAttribute("loginMemberEmail", claims.get("email", String.class));
+            request.setAttribute("jwtAccessToken", token);
 
             chain.doFilter(req, res);
         } else {

@@ -25,10 +25,10 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Integer price;
 
-    @Column(name = "imageUrl", nullable = false)
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @Column(name = "needsMdApproval", nullable = false)
+    @Column(name = "needs_md_approval", nullable = false)
     private boolean needsMdApproval;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")

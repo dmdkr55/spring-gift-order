@@ -1,6 +1,5 @@
 package gift.controller;
 
-
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -10,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import gift.dto.KakaoUserInfoResponseDto;
 import gift.dto.TokenResponse;
-import gift.service.KakaoService;
+import gift.service.SocialService;
 import gift.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,10 +21,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(MockitoExtension.class)
-class KakaoLoginControllerTest {
+class SocialLoginControllerTest {
 
     @Mock
-    private KakaoService kakaoService;
+    private SocialService socialService;
 
     @Mock
     private MemberService memberService;
@@ -34,7 +33,7 @@ class KakaoLoginControllerTest {
 
     @BeforeEach
     void setUp() {
-        KakaoLoginController controller = new KakaoLoginController(kakaoService, memberService);
+        SocialLoginController controller = new SocialLoginController(socialService, memberService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
@@ -42,33 +41,34 @@ class KakaoLoginControllerTest {
     void 신규_회원일_경우_회원가입_URI로_리다이렉트() throws Exception {
         // given
         String code = "test-auth-code";
-        String kakaoAccessToken = "test-access-token";
-        Long kakaoId = 12345L;
+        String socialAccessToken = "test-access-token";
+        Long socialId = 12345L;
 
-        when(kakaoService.getAccessTokenFromKakao(code)).thenReturn(kakaoAccessToken);
-        when(kakaoService.getUserInfo(kakaoAccessToken)).thenReturn(
-            new KakaoUserInfoResponseDto(kakaoId));
-        when(memberService.isKakaoIdExists(kakaoId)).thenReturn(false);
+        when(socialService.getAccessTokenFromKakao(code)).thenReturn(socialAccessToken);
+        when(socialService.getUserInfo(socialAccessToken)).thenReturn(
+            new KakaoUserInfoResponseDto(socialId));
+        when(memberService.isSocialIdExists(socialId)).thenReturn(false);
 
         // when, then
         mockMvc.perform(get("/").param("code", code))
             .andExpect(status().isFound()) // 302 redirect
-            .andExpect(redirectedUrl("/admin/members/new?kakaoId=" + kakaoId));
+            .andExpect(redirectedUrl("/admin/members/new?socialId=" + socialId
+                + "&providerType=kakao&socialAccessToken=" + socialAccessToken));
     }
 
     @Test
     void 기존_회원일_경우_토큰_응답() throws Exception {
         // given
         String code = "test-auth-code";
-        String kakaoAccessToken = "test-access-token";
-        Long kakaoId = 54321L;
+        String socialAccessToken = "test-access-token";
+        Long socialId = 54321L;
         TokenResponse tokenResponse = new TokenResponse("access-token-value");
 
-        when(kakaoService.getAccessTokenFromKakao(code)).thenReturn(kakaoAccessToken);
-        when(kakaoService.getUserInfo(kakaoAccessToken)).thenReturn(
-            new KakaoUserInfoResponseDto(kakaoId));
-        when(memberService.isKakaoIdExists(kakaoId)).thenReturn(true);
-        when(memberService.findByKakaoId(kakaoId)).thenReturn(tokenResponse);
+        when(socialService.getAccessTokenFromKakao(code)).thenReturn(socialAccessToken);
+        when(socialService.getUserInfo(socialAccessToken)).thenReturn(
+            new KakaoUserInfoResponseDto(socialId));
+        when(memberService.isSocialIdExists(socialId)).thenReturn(true);
+        when(memberService.findBySocialId(socialId)).thenReturn(tokenResponse);
 
         // when, then
         mockMvc.perform(get("/").param("code", code))

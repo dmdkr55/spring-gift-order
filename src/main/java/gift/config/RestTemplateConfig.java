@@ -14,7 +14,7 @@ public class RestTemplateConfig {
     public RestTemplate restTemplate() {
         return new RestTemplateBuilder()
             .errorHandler(new RestTemplateResponseErrorHandler())
-            .connectTimeout(Duration.ofSeconds(5))
+            .connectTimeout(Duration.ofSeconds(3))
             .readTimeout(Duration.ofSeconds(5))
             .build();
     }
