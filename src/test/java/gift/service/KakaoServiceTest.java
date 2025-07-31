@@ -22,7 +22,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @ExtendWith(MockitoExtension.class)
-class SocialServiceTest {
+class KakaoServiceTest {
 
     @Mock
     private RestTemplate restTemplate;
@@ -30,11 +30,11 @@ class SocialServiceTest {
     @Mock
     private KakaoProperties kakaoProperties;
 
-    private SocialService socialIdService;
+    private KakaoService socialIdService;
 
     @BeforeEach
     void setUp() {
-        socialIdService = new SocialService(kakaoProperties, restTemplate);
+        socialIdService = new KakaoService(kakaoProperties, restTemplate);
     }
 
     @Test

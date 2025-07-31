@@ -18,15 +18,15 @@ public class OrderService {
 
     private final MemberService memberService;
     private final OptionService optionService;
-    private final SocialService socialService;
+    private final KakaoService kakaoService;
     private final WishlistService wishlistService;
 
     public OrderService(OrderRepository orderRepository, MemberService memberService,
-        OptionService optionService, SocialService socialService, WishlistService wishlistService) {
+        OptionService optionService, KakaoService kakaoService, WishlistService wishlistService) {
         this.orderRepository = orderRepository;
         this.memberService = memberService;
         this.optionService = optionService;
-        this.socialService = socialService;
+        this.kakaoService = kakaoService;
         this.wishlistService = wishlistService;
     }
 
@@ -44,7 +44,7 @@ public class OrderService {
 
         Member member = memberService.findByEmail(memberDto.getEmail());
         request.setImageUrl(option.getProduct().getImageUrl());
-        socialService.sendMessage(member.getSocialAccessToken(), request);
+        kakaoService.sendMessage(member.getSocialAccessToken(), request);
 
         Order order = new Order(option, request.getQuantity(), LocalDateTime.now(),
             request.getMessage());

@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import gift.dto.KakaoUserInfoResponseDto;
 import gift.dto.TokenResponse;
-import gift.service.SocialService;
+import gift.service.KakaoService;
 import gift.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 class SocialLoginControllerTest {
 
     @Mock
-    private SocialService socialService;
+    private KakaoService kakaoService;
 
     @Mock
     private MemberService memberService;
@@ -33,7 +33,7 @@ class SocialLoginControllerTest {
 
     @BeforeEach
     void setUp() {
-        SocialLoginController controller = new SocialLoginController(socialService, memberService);
+        SocialLoginController controller = new SocialLoginController(kakaoService, memberService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
@@ -44,8 +44,8 @@ class SocialLoginControllerTest {
         String socialAccessToken = "test-access-token";
         Long socialId = 12345L;
 
-        when(socialService.getAccessTokenFromKakao(code)).thenReturn(socialAccessToken);
-        when(socialService.getUserInfo(socialAccessToken)).thenReturn(
+        when(kakaoService.getAccessTokenFromKakao(code)).thenReturn(socialAccessToken);
+        when(kakaoService.getUserInfo(socialAccessToken)).thenReturn(
             new KakaoUserInfoResponseDto(socialId));
         when(memberService.isSocialIdExists(socialId)).thenReturn(false);
 
@@ -64,8 +64,8 @@ class SocialLoginControllerTest {
         Long socialId = 54321L;
         TokenResponse tokenResponse = new TokenResponse("access-token-value");
 
-        when(socialService.getAccessTokenFromKakao(code)).thenReturn(socialAccessToken);
-        when(socialService.getUserInfo(socialAccessToken)).thenReturn(
+        when(kakaoService.getAccessTokenFromKakao(code)).thenReturn(socialAccessToken);
+        when(kakaoService.getUserInfo(socialAccessToken)).thenReturn(
             new KakaoUserInfoResponseDto(socialId));
         when(memberService.isSocialIdExists(socialId)).thenReturn(true);
         when(memberService.findBySocialId(socialId)).thenReturn(tokenResponse);
