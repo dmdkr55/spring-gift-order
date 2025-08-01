@@ -3,7 +3,6 @@ package gift.service;
 import gift.dto.LoginMemberDto;
 import gift.dto.OrderRequest;
 import gift.dto.OrderResponse;
-import gift.model.Member;
 import gift.model.Option;
 import gift.model.Order;
 import gift.repository.OrderRepository;
@@ -42,9 +41,11 @@ public class OrderService {
 
         wishlistService.deleteWishlist(memberDto, option.getProduct().getId());
 
-        Member member = memberService.findByEmail(memberDto.getEmail());
+        String kakaoAccessToken = memberService.findByEmail(memberDto.getEmail())
+            .getSocialToken().getAccessToken();
         request.setImageUrl(option.getProduct().getImageUrl());
-        kakaoService.sendMessage(member.getSocialAccessToken(), request);
+
+        kakaoService.sendMessage(kakaoAccessToken, request);
 
         Order order = new Order(option, request.getQuantity(), LocalDateTime.now(),
             request.getMessage());
